@@ -1,0 +1,1 @@
+export const DB_NAME = "videotube" //not used by me in this project. it was giving postman error in this case
