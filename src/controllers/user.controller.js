@@ -240,6 +240,9 @@ const changeCurrentPassword = asyncHandler(async(req, res) => {
     .status(200)
     .json(new ApiResponse(200, {}, "Password changed successfully"))
 })
+
+
+//method 1 
 //get the current user
 const getCurrentUser = asyncHandler(async(req, res) => {
     return res
@@ -250,6 +253,82 @@ const getCurrentUser = asyncHandler(async(req, res) => {
         "User fetched successfully"
     ))
 })
+
+//method 2
+//get a particular user from the database
+const getUser = asyncHandler(async(req,res) =>{
+    try {
+        const user = await User.findById(req.params.id)
+        const {password, ...others} = user._doc
+        return res
+        .status(200)
+        .json(new ApiResponse(200,others,"User Details have been fetched successfully!"))
+    } catch (error) {
+        throw new ApiError(401, "User data couldn't be fetched successfully! ")
+        
+    }
+})
+
+
+//get all users from the database
+const getAllUser = asyncHandler(async(req,res) =>{
+    const query = req.query.new
+    try {
+        const users = query? await User.find().sort({_id:-1}).limit(5) : await User.find()
+        return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                users,
+                "All users have been fectched successfully from the database",
+            )
+        )
+    } catch (error) {
+        return res
+        .status(401)
+        .json(
+            new ApiError(500, "Error while fectching all the users from the database! ")
+        )
+    }
+})
+
+// get user stats from the database
+const getUserStats = asyncHandler(async(req,res) => {
+    const date = new Date()
+    const lastyear = new Date(date.setFullYear(date.getFullYear() - 1))
+    try {
+        const data = await User.aggregate([
+             { $match: { createdAt: {$gte: lastyear } } },
+          {
+            $project: {
+              month: { $month: "$createdAt" },
+            },
+          },
+          {
+            $group: {
+              _id: "$month",
+              total: { $sum: 1 },
+            },
+          },
+        ]);
+        return res
+        .status(200)
+        .json(
+            new  ApiResponse(
+                200,
+                data,
+                "All User data has been fetched successfully! "
+            )
+        )
+      } catch (err) {
+        throw new ApiError(401, "User stats couldn't be fetched successfully by the database! ")
+      }
+
+
+
+})
+
 // receiing the details from the current user
 const updateAccountDetails = asyncHandler(async(req, res) => {
     const {fullname, email} = req.body
@@ -335,4 +414,7 @@ export {registerUser ,
       getCurrentUser,
     updateAccountDetails,
 updateUserAvatar,
-updateUserCoverImage}
+updateUserCoverImage,
+getUser,
+getAllUser,
+getUserStats}
