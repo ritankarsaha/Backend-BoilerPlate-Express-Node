@@ -415,11 +415,7 @@ export {registerUser ,
       getCurrentUser,
     updateAccountDetails,
 updateUserAvatar,
-<<<<<<< HEAD
 updateUserCoverImage,
 getUser,
 getAllUser,
 getUserStats}
-=======
-updateUserCoverImage}
->>>>>>> c9fbe8466fd19702325894de6f3451bce79970da
