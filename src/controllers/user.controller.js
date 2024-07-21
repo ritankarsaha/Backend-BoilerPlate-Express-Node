@@ -253,7 +253,6 @@ const getCurrentUser = asyncHandler(async(req, res) => {
         "User fetched successfully"
     ))
 })
-<<<<<<< HEAD
 
 //method 2
 //get a particular user from the database
@@ -331,9 +330,7 @@ const getUserStats = asyncHandler(async(req,res) => {
 })
 
 // receiing the details from the current user
-=======
 // updating the details from the current user
->>>>>>> c9fbe8466fd19702325894de6f3451bce79970da
 const updateAccountDetails = asyncHandler(async(req, res) => {
     const {fullname, email} = req.body
 
